@@ -31,9 +31,10 @@ public class SecurityConfig {
                                 "/api/*/posts/{postId:\\d+}/comments", "/api/*/posts/{postId:\\d+}/comments/{commentId:\\d+}").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/members/login", "/api/v1/members/join").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/members/logout").permitAll()
-                        .requestMatchers("/api/v1/adm/**").hasRole("ADMIN") // admin 사용자만 접근 가능.
-                        .requestMatchers("/api/*/**").authenticated()
-                        .anyRequest().authenticated())
+                        .requestMatchers("/api/v1/adm/**").hasRole("ADMIN")
+                        .requestMatchers("/api/**").authenticated() // api 관련 요청은 인증 필요.
+                        .anyRequest().permitAll()) // 나머지는 인증 불필요.
+
                 .csrf(( csrf) -> csrf.disable())
                 .headers((headers) -> headers
                         .addHeaderWriter(new XFrameOptionsHeaderWriter(
